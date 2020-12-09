@@ -1,2 +1,2 @@
 # prestaModul
-Informacja o zakupach
+Informacja o zakupach w bloku na stronie Główna
