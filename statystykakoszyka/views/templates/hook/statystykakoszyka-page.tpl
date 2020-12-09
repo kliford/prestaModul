@@ -15,7 +15,7 @@
                     <div class="inline-bl total-info-bl line-left">
                         <div class='info-text'>
                             <p class="description-txt txt-big">Na kwotę</p>
-                            <p class="top-span"><span class="number-span">12 450</span> zł</p>
+                            <p class="top-span"><span class="number-span">12450</span> zł</p>
                         </div>
                     </div>
                     <div class="inline-bl quantity-bl line-left">

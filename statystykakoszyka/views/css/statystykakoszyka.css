@@ -116,10 +116,10 @@ padding: 1vh 2vh;
     width: 27%;
 }
 .basket-bl{
-    width: 23%;
+    width: 25%;
 }
 .total-info-bl{
-    width: 17% ;
+    width: 15% ;
 }
 .column-2.inline-bl{
     width: 100%;
@@ -128,7 +128,10 @@ padding: 1vh 2vh;
  margin-left: 0.5vw;
  font-size: 15px;
 }
-.contentPage span{
+.contentPage p{
+    margin-bottom: 1px;
+}
+.contentPage .top-span{
     display: inline-block;
     width: 100%;
     font-size: 1.15em;

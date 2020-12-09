@@ -67,7 +67,9 @@ class statystykakoszyka extends Module
 	public function hookDisplayHeader($params)
 	{
 		$this->context->controller->addCss($this->_path . 'views/css/statystykakoszyka.css', 'all');
+		$this->context->controller->addJS(($this->_path) . 'views/js/CountUp.js');
 		$this->context->controller->addJS(($this->_path) . 'views/js/script.js');
+
 	}
 		
 	/** Module configuration page */
