@@ -1,0 +1,131 @@
+/*Admin css*/
+.container-modul-admin{
+    max-width: 960px;
+    padding: 0;
+}
+.top-middle.checkbox-bl label{
+    display: inline-block;
+    background-color: rgba(255, 255, 255, .9);
+    border: 2px solid rgba(139, 139, 139, .3);
+    color: #333333;
+    border-radius: 5px;
+    white-space: nowrap;
+    margin: 3px 0px;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: all .2s;
+}
+
+.top-middle.checkbox-bl label {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.top-middle.checkbox-bl label::before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-weight: 900;
+    font-size: 16px;
+    padding: 2px 12px 2px 2px;
+    content: "+";
+    transition: all .3s ease-in-out;
+}
+
+.top-middle.checkbox-bl .btn-group input[type="checkbox"]:checked + label::before {
+    content: "✔";
+    font-size: 14px;
+    transition: all .3s ease-in-out;
+}
+
+.top-middle.checkbox-bl input[type="checkbox"]:checked + label {
+    border: 2px solid #37983a;
+    background-color: #37983a;
+    color: #fff;
+    transition: all .2s;
+}
+
+.top-middle.checkbox-bl input[type="checkbox"] {
+  display: absolute;
+}
+.top-middle.checkbox-bl input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+}
+.top-bottom{
+    margin-top:3vh;
+}
+
+/*Front Page*/
+.sectionPage{
+    margin-top: 2vh;
+    overflow: hidden;
+    border: 1px solid rgba(139, 139, 139, .3);
+    border-radius: 5px 5px 0 0;
+    width: 100%;
+}
+.sectionPage .row{
+    margin:0;
+}
+
+.container-modul-page{
+    max-width: 800px;
+    padding: 0;
+}
+.sectionPage h2.title-h2{
+font-size: 18px;
+text-transform: uppercase;
+padding: 12px 15px;
+background-image: url(../../images/bg-top-modul.png);
+background-size:cover ;
+color: #fff;
+margin:0;
+}
+.contentPage .inline-bl,.contentPage{
+display: flex;
+flex-direction: row;
+justify-content: flex-start;
+align-items: center;
+padding: 3vh 2vh;
+}
+.contentPage .inline-bl figure{
+    max-width: 40px;
+}
+.contentPage .inline-bl img{
+    width: 100%;
+}
+.contentPage{
+    padding: 3vh 0;
+    flex-wrap: wrap;
+}
+.client-bl{
+    width: 33% ;
+}
+.quantity-bl{
+    width: 27%;
+}
+.basket-bl{
+    width: 23%;
+}
+.total-info-bl{
+    width: 17% ;
+}
+.column-2.inline-bl{
+    width: 100%;
+}
+.contentPage .info-text{
+ margin-left: 0.5vw;
+ font-size: 15px;
+}
+.contentPage span{
+    display: inline-block;
+    width: 100%;
+    font-size: 1.15em;
+    color: #37983a;
+}
