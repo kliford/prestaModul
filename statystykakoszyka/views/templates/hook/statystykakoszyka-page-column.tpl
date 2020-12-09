@@ -8,18 +8,14 @@
                             <img src="{$base_dir}modules/statystykakoszyka/images/img-basket.png" alt="" />   
                         </figure>
                         <div class='info-text'>
-                            <p class="description-txt">
-                                Dziś złożono
-                                <span>56 zamówień</span>
-                            </p>
+                            <p class="description-txt">Dziś złożono</p>
+                            <p class="top-span"><span class="number-span">56</span> zamówień</p>
                         </div>
                     </div>
                     <div class="inline-bl total-info-bl line-left column-2">
                         <div class='info-text'>
-                            <p class="description-txt txt-big">
-                                Na kwotę
-                                <span>12 450 zł</span>
-                            </p>
+                            <p class="description-txt txt-big">Na kwotę</p>
+                            <p class="top-span"><span class="number-span">12 450</span> zł</p>
                         </div>
                     </div>
                     <div class="inline-bl quantity-bl line-left column-2">
@@ -27,10 +23,8 @@
                             <img src="{$base_dir}modules/statystykakoszyka/images/img-bascket-sun.png" alt>
                         </figure>
                         <div class='info-text'>
-                            <p class="description-txt">
-                                Dziś utworzono
-                                <span>567 koszyków</span>
-                            </p>
+                            <p class="description-txt">Dziś utworzono</p>
+                            <p class="top-span"><span class="number-span">567</span> koszyków</p>
                         </div>
                     </div>
                     <div class="inline-bl client-bl line-left column-2">
@@ -38,10 +32,8 @@
                             <img src="{$base_dir}modules/statystykakoszyka/images/img-user.png" alt>
                         </figure>
                         <div class='info-text'>
-                            <p class="description-txt">
-                                <span><span id="new_customers"></span> nowych klientów</span>
-                                się dziś zarejestrowało
-                            </p>
+                            <p class="top-span"><span class="number-span">678</span> nowych klientów</p>
+                            <p class="description-txt">się dziś zarejestrowało</p>
                         </div>
                     </div>
                 </div>

@@ -63,11 +63,12 @@ class statystykakoszyka extends Module
 	{
 		$this->context->controller->addCss($this->_path . 'views/css/statystykakoszyka.css', 'all');
 	}
-		
-	public function hookDisplayHeader()
-    {
-			$this->context->controller->addCss($this->_path . 'views/css/statystykakoszyka.css', 'all');
-    }
+	
+	public function hookDisplayHeader($params)
+	{
+		$this->context->controller->addCss($this->_path . 'views/css/statystykakoszyka.css', 'all');
+		$this->context->controller->addJS(($this->_path) . 'views/js/script.js');
+	}
 		
 	/** Module configuration page */
 	public function getContent()
