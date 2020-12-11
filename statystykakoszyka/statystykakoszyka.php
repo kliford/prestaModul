@@ -12,15 +12,13 @@
 
 if ( !defined('_PS_VERSION_') ) exit;
 
-// We look for our model since we want to install it's SQL from the module install
-require_once(__DIR__ . '/models/statystykakoszyka.php');
 
 class statystykakoszyka extends Module
 {
-	const DEFAULT_CONFIGURATION = [
-		// Put your default configuration here, e.g :
-		// 'STATYSTYKAKOSZYKA_BACKGROUND_COLOR' => '#eee',
-	];
+	protected $default_order_score = 1;
+	protected $default_new_client = 1;
+	protected $default_basket_score = 1;
+	protected $default_total_order = 1;
 
 	public function __construct()
 	{
@@ -29,35 +27,79 @@ class statystykakoszyka extends Module
 
 	public function install()
 	{
-
-		return
-			parent::install()
-			&& $this->installTab()
-			&& $this->initDefaultConfigurationValues()
-			&& $this->registerHook('displayHeader')
+		/* Adds Module */
+		if (parent::install() &&
+			 $this->registerHook('displayHeader')
 			&& $this->registerHook('displayLeftColumn')
 			&& $this->registerHook('displayRightColumn')
 			&& $this->registerHook('displayHome')
 			&& $this->registerHook('displayBackOfficeHeader')
-			&& statystykakoszykaModel::installSql()
-		;
+		)
+		{
+			$shops = Shop::getContextListShopID();
+			$shop_groups_list = array();
+	
+			/* Setup each shop */
+			foreach ($shops as $shop_id)
+			{
+				$shop_group_id = (int)Shop::getGroupFromShop($shop_id, true);
+	
+				if (!in_array($shop_group_id, $shop_groups_list))
+					$shop_groups_list[] = $shop_group_id;
+
+					/* Sets up configuration */
+					$res = Configuration::updateValue('ORDER_SCORE', $this->default_order_score, false, $shop_group_id, $shop_id);
+					$res &= Configuration::updateValue('NEW_CLIENT', $this->default_new_client, false, $shop_group_id, $shop_id);
+					$res &= Configuration::updateValue('BASKET_SCORE', $this->default_basket_score, false, $shop_group_id, $shop_id);
+					$res &= Configuration::updateValue('TOTAL_ORDER', $this->default_total_order, false, $shop_group_id, $shop_id);
+				}
+	
+				/* Sets up Shop Group configuration */
+				if (count($shop_groups_list))
+				{
+					foreach ($shop_groups_list as $shop_group_id)
+					{
+						$res = Configuration::updateValue('ORDER_SCORE', $this->default_order_score, false, $shop_group_id);
+						$res &= Configuration::updateValue('NEW_CLIENT', $this->default_new_client, false, $shop_group_id);
+						$res &= Configuration::updateValue('BASKET_SCORE', $this->default_basket_score, false, $shop_group_id);
+						$res &= Configuration::updateValue('TOTAL_ORDER', $this->default_total_order, false, $shop_group_id);
+					}
+				}
+	
+				/* Sets up Global configuration */
+				$res = Configuration::updateValue('ORDER_SCORE', $this->default_order_score);
+				$res &= Configuration::updateValue('NEW_CLIENT', $this->default_new_client);
+				$res &= Configuration::updateValue('BASKET_SCORE', $this->default_basket_score);
+				$res &= Configuration::updateValue('TOTAL_ORDER', $this->default_total_order);
+	
+				// Disable on mobiles and tablets
+				$this->disableDevice(Context::DEVICE_MOBILE);
+	
+				return (bool)$res;
+			}
+	
+			return false;
 	}
 
 	public function uninstall()
 	{
+		if (parent::uninstall())
+		{
 
-		return
-			parent::uninstall()
-			&& $this->uninstallTab()
-			&& $this->unregisterHook('displayHome')
-			&& $this->unregisterHook('displayLeftColumn')
-			&& $this->unregisterHook('displayRightColumn')
-			&& $this->unregisterHook('displayHeader')
-			&& $this->unregisterHook('displayBackOfficeHeader')
-			&& statystykakoszykaModel::uninstallSql()
-		;
+			/* Unsets configuration */
+			$res = Configuration::deleteByName('ORDER_SCORE');
+			$res &= Configuration::deleteByName('NEW_CLIENT');
+			$res &= Configuration::deleteByName('BASKET_SCORE');
+			$res &= Configuration::deleteByName('TOTAL_ORDER');
+
+			return (bool)$res;
+		}
+
+		return false;
 		
 	}
+
+
 	
 	public function hookDisplayBackOfficeHeader()
 	{
@@ -75,8 +117,187 @@ class statystykakoszyka extends Module
 	/** Module configuration page */
 	public function getContent()
 	{
-		return $this->display(__FILE__, 'statystykakoszyka-admin.tpl');
+
+		$this->_html .=$this->renderForm();
+
+		if(Tools::isSubmit('submitStatystykaKoszyka')){
+			$this->_postProcess();
+		}
+
+		return $this->_html;
 	}
+
+	public function renderForm()
+	{
+		$fields_form = array(
+			'form' => array(
+				'legend' => array(
+					'title' => $this->l('Ustawienia'),
+					'icon' => 'icon-cogs'
+				),
+				'input' => array(
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Pokazywać ilość zamówień'),
+						'name' => 'ORDER_SCORE',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Pokazywać nowych klientów'),
+						'name' => 'NEW_CLIENT',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Pokazywać ilość koszyków'),
+						'name' => 'BASKET_SCORE',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+					),
+					array(
+						'type' => 'switch',
+						'label' => $this->l('Pokazywać kwotę zamówień'),
+						'name' => 'TOTAL_ORDER',
+						'values' => array(
+							array(
+								'id' => 'active_on',
+								'value' => 1,
+								'label' => $this->l('Enabled')
+							),
+							array(
+								'id' => 'active_off',
+								'value' => 0,
+								'label' => $this->l('Disabled')
+							)
+						),
+					),
+				),
+				'submit' => array(
+					'title' => $this->l('Save'),
+				)
+			),
+		);
+
+		$helper = new HelperForm();
+		$helper->show_toolbar = false;
+		$helper->table =  $this->table;
+		$lang = new Language((int)Configuration::get('PS_LANG_DEFAULT'));
+		$helper->default_form_language = $lang->id;
+		$helper->allow_employee_form_lang = Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') ? Configuration::get('PS_BO_ALLOW_EMPLOYEE_FORM_LANG') : 0;
+		$this->fields_form = array();
+		
+		$helper->identifier = $this->identifier;
+		$helper->submit_action = 'submitStatystykaKoszyka';
+		$helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+		$helper->token = Tools::getAdminTokenLite('AdminModules');
+		$helper->tpl_vars = array(
+			'fields_value' => $this->getConfigFieldsValues(),
+			'languages' => $this->context->controller->getLanguages(),
+			'id_language' => $this->context->language->id
+		);
+
+		return $helper->generateForm(array($fields_form));
+	}
+
+	public function getConfigFieldsValues()
+	{
+		$id_shop_group = Shop::getContextShopGroupID();
+		$id_shop = Shop::getContextShopID();
+
+		return array(
+			'ORDER_SCORE' => Tools::getValue('ORDER_SCORE', Configuration::get('ORDER_SCORE', null, $id_shop_group, $id_shop)),
+			'NEW_CLIENT' => Tools::getValue('NEW_CLIENT', Configuration::get('NEW_CLIENT', null, $id_shop_group, $id_shop)),
+			'BASKET_SCORE' => Tools::getValue('BASKET_SCORE', Configuration::get('BASKET_SCORE', null, $id_shop_group, $id_shop)),
+			'TOTAL_ORDER' => Tools::getValue('TOTAL_ORDER', Configuration::get('TOTAL_ORDER', null, $id_shop_group, $id_shop)),
+		);
+	}
+
+	protected function _postProcess()
+	{
+		$shop_group_list = array();
+		$shop = Shop::getContextListShopID();
+
+		foreach ($shop as $shop_id)
+		{
+			$shop_group_id = (int)Shop::getGroupFromShop($shop_id, true);
+
+			if (!in_array($shop_group_id, $shop_group_list))
+				$shop_group_list[] = $shop_group_id;
+
+			$res = Configuration::updateValue('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE'), false, $shop_group_id, $shop_id);
+			$res = Configuration::updateValue('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT'), false, $shop_group_id, $shop_id);
+			$res = Configuration::updateValue('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE'), false, $shop_group_id, $shop_id);
+			$res = Configuration::updateValue('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER'), false, $shop_group_id, $shop_id);
+
+		}
+
+		/* Update global shop context if needed */
+		switch ($shop_context)
+		{
+			case Shop::CONTEXT_ALL:
+			$res = Configuration::updateValue('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE'));
+			$res &= Configuration::updateValue('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT'));
+			$res &= Configuration::updateValue('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE'));
+			$res &= Configuration::updateValue('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER')); 
+			if (count($shop_group_list))
+			{
+				foreach ($shop_group_list as $shop_group_id)
+				{
+					$res = Configuration::updateValue('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE'), false, $shop_group_id);
+					$res &= Configuration::updateValue('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT'), false, $shop_group_id);
+					$res &= Configuration::updateValue('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE'), false, $shop_group_id);
+					$res &= Configuration::updateValue('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER'), false, $shop_group_id); 
+				}
+			}
+		break;
+		case Shop::CONTEXT_GROUP:
+			if (count($shop_group_list))
+			{
+				foreach ($shop_group_list as $shop_group_id)
+				{
+					$res = Configuration::updateValue('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE'), false, $shop_group_id);
+					$res &= Configuration::updateValue('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT'), false, $shop_group_id);
+					$res &= Configuration::updateValue('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE'), false, $shop_group_id);
+					$res &= Configuration::updateValue('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER'), false, $shop_group_id); 
+				}
+			}
+		break;
+		}
+	}
+
 	public function hookDisplayHome($params)
 	{
 		return $this->display(__FILE__, 'statystykakoszyka-page.tpl');

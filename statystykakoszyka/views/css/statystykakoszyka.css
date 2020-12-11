@@ -109,10 +109,6 @@ padding: 1vh 2vh;
     background-image: url(../../images/bg-bottom-modul.png);
     background-size:100% 100%;
 }
-.column-size.contentPage{
-    background-position: center right;
-    background-size: cover;
-}
 .client-bl{
     width: 33% ;
 }
@@ -144,10 +140,6 @@ padding: 1vh 2vh;
 @media only screen and (max-width:800px){
     .contentPage .inline-bl{
         width: 50%;
-    }
-    .contentPage{
-        background-position: center right;
-        background-size: cover;
     }
 }
 @media only screen and (max-width:400px){

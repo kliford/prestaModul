@@ -46,7 +46,6 @@
 })(jQuery);
 
 jQuery(function ($) {
-    var numb = [];
     let blNumb = $('.number-span');
     blNumb.each(function (index, value) {
         let valueNum = $(this).text();
