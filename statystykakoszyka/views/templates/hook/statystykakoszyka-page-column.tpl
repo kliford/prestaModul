@@ -2,7 +2,7 @@
         <div class="row sectionPage">
             <div class="col">
                 <h2 class="title-h2">Podsumowanie</h2>
-                <div class="row contentPage justify-content-md-center">
+                <div class="row contentPage justify-content-md-center column-size">
                     <div class="inline-bl basket-bl column-2">
                         <figure>
                             <img src="{$base_dir}modules/statystykakoszyka/images/img-basket.png" alt="" />   
