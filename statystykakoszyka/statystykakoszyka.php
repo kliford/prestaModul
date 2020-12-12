@@ -277,31 +277,34 @@ class statystykakoszyka extends Module
 	public function hookDisplayHome($params)
 	{	
 
-		$this->context->smarty->assign(array(
-			'order_value' => (int)Configuration::get('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE')),
-			'client_value' => (int)Configuration::get('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT')),
-			'basket_value' => (int)Configuration::get('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE')),
-			'total_value' => (int)Configuration::get('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER')),
-		));
+		$this->getValueConfiguration();
 
 		return $this->display(__FILE__, 'statystykakoszyka-page.tpl');
 	}
 
 	public function hookDisplayLeftColumn($params)
 	{
-		$this->context->smarty->assign(array(
-			'order_value' => (int)Configuration::get('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE')),
-			'client_value' => (int)Configuration::get('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT')),
-			'basket_value' => (int)Configuration::get('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE')),
-			'total_value' => (int)Configuration::get('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER')),
-		));
+		$this->getValueConfiguration();
 		
 		return $this->display(__FILE__, 'statystykakoszyka-page-column.tpl');
 	}
 
 	public function hookDisplayRightColumn($params)
 	{
+
+		$this->getValueConfiguration();
+		
 		return $this->display(__FILE__, 'statystykakoszyka-page-column.tpl');
+	}
+
+	public function getValueConfiguration()
+	{
+		$this->context->smarty->assign(array(
+			'order_value' => (int)Configuration::get('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE')),
+			'client_value' => (int)Configuration::get('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT')),
+			'basket_value' => (int)Configuration::get('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE')),
+			'total_value' => (int)Configuration::get('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER')),
+		));
 	}
 
 	/** Initialize the module declaration */
