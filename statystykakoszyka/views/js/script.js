@@ -46,6 +46,12 @@
 })(jQuery);
 
 jQuery(function ($) {
+    function containerWidth() {
+        let parrentContainer = $('.container-modul-page');
+        let widthChild = parrentContainer.find('.contentPage').width();
+        parrentContainer.css('width', widthChild + 5);
+    }
+    containerWidth();
     let blNumb = $('.number-span');
     blNumb.each(function (index, value) {
         let valueNum = $(this).text();
@@ -54,9 +60,6 @@ jQuery(function ($) {
             to: valueNum,
             speed: 5000,
             refreshInterval: 50,
-            onComplete: function (value) {
-                console.debug(this);
-            }
         });
     });
 });

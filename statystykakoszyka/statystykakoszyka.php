@@ -118,7 +118,7 @@ class statystykakoszyka extends Module
 	public function getContent()
 	{
 
-		$this->_html .=$this->renderForm();
+		$this->_html .= $this->renderForm();
 
 		if(Tools::isSubmit('submitStatystykaKoszyka')){
 			$this->_postProcess();
@@ -243,6 +243,7 @@ class statystykakoszyka extends Module
 			'BASKET_SCORE' => Tools::getValue('BASKET_SCORE', Configuration::get('BASKET_SCORE', null, $id_shop_group, $id_shop)),
 			'TOTAL_ORDER' => Tools::getValue('TOTAL_ORDER', Configuration::get('TOTAL_ORDER', null, $id_shop_group, $id_shop)),
 		);
+
 	}
 
 	protected function _postProcess()
@@ -265,46 +266,36 @@ class statystykakoszyka extends Module
 		}
 
 		/* Update global shop context if needed */
-		switch ($shop_context)
-		{
-			case Shop::CONTEXT_ALL:
+
 			$res = Configuration::updateValue('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE'));
 			$res &= Configuration::updateValue('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT'));
 			$res &= Configuration::updateValue('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE'));
 			$res &= Configuration::updateValue('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER')); 
-			if (count($shop_group_list))
-			{
-				foreach ($shop_group_list as $shop_group_id)
-				{
-					$res = Configuration::updateValue('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE'), false, $shop_group_id);
-					$res &= Configuration::updateValue('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT'), false, $shop_group_id);
-					$res &= Configuration::updateValue('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE'), false, $shop_group_id);
-					$res &= Configuration::updateValue('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER'), false, $shop_group_id); 
-				}
-			}
-		break;
-		case Shop::CONTEXT_GROUP:
-			if (count($shop_group_list))
-			{
-				foreach ($shop_group_list as $shop_group_id)
-				{
-					$res = Configuration::updateValue('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE'), false, $shop_group_id);
-					$res &= Configuration::updateValue('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT'), false, $shop_group_id);
-					$res &= Configuration::updateValue('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE'), false, $shop_group_id);
-					$res &= Configuration::updateValue('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER'), false, $shop_group_id); 
-				}
-			}
-		break;
-		}
+
 	}
 
 	public function hookDisplayHome($params)
-	{
+	{	
+
+		$this->context->smarty->assign(array(
+			'order_value' => (int)Configuration::get('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE')),
+			'client_value' => (int)Configuration::get('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT')),
+			'basket_value' => (int)Configuration::get('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE')),
+			'total_value' => (int)Configuration::get('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER')),
+		));
+
 		return $this->display(__FILE__, 'statystykakoszyka-page.tpl');
 	}
 
 	public function hookDisplayLeftColumn($params)
 	{
+		$this->context->smarty->assign(array(
+			'order_value' => (int)Configuration::get('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE')),
+			'client_value' => (int)Configuration::get('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT')),
+			'basket_value' => (int)Configuration::get('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE')),
+			'total_value' => (int)Configuration::get('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER')),
+		));
+		
 		return $this->display(__FILE__, 'statystykakoszyka-page-column.tpl');
 	}
 

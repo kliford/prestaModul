@@ -1,9 +1,9 @@
-<section class="container container-modul-page">
+<section class="container-modul-page">
         <div class="row sectionPage">
             <div class="col">
                 <h2 class="title-h2">{l s='Podsumowanie' mod='statystykakoszyka'}</h2>
                 <div class="row contentPage justify-content-md-center">
-                    <div class="inline-bl basket-bl">
+                    <div class="inline-bl basket-bl {if $order_value != 0}active-bl{else}hide-bl{/if}">
                         <figure>
                             <img src="{$base_dir}modules/statystykakoszyka/images/img-basket.png" alt="" />   
                         </figure>
@@ -12,13 +12,13 @@
                             <p class="top-span"><span class="number-span">56</span> {l s='zamówień' mod='statystykakoszyka'}</p>
                         </div>
                     </div>
-                    <div class="inline-bl total-info-bl line-left">
+                    <div class="inline-bl total-info-bl line-left {if $total_value != 0}active-bl{else}hide-bl{/if}">
                         <div class='info-text'>
                             <p class="description-txt txt-big"> {l s='Na kwotę' mod='statystykakoszyka'}</p>
                             <p class="top-span"><span class="number-span">12450</span> {l s='zł' mod='statystykakoszyka'}</p>
                         </div>
                     </div>
-                    <div class="inline-bl quantity-bl line-left">
+                    <div class="inline-bl quantity-bl line-left {if $basket_value != 0}active-bl{else}hide-bl{/if}">
                         <figure>
                             <img src="{$base_dir}modules/statystykakoszyka/images/img-bascket-sun.png" alt>
                         </figure>
@@ -27,7 +27,7 @@
                             <p class="top-span"><span class="number-span">567</span> {l s='koszyków' mod='statystykakoszyka'}</p>
                         </div>
                     </div>
-                    <div class="inline-bl client-bl line-left">
+                    <div class="inline-bl client-bl line-left {if $client_value != 0}active-bl{else}hide-bl{/if}">
                         <figure>
                             <img src="{$base_dir}modules/statystykakoszyka/images/img-user.png" alt>
                         </figure>
