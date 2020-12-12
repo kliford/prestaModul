@@ -49,7 +49,7 @@ jQuery(function ($) {
     function containerWidth() {
         let parrentContainer = $('.container-modul-page');
         let widthChild = parrentContainer.find('.contentPage').width();
-        parrentContainer.css('width', widthChild + 5);
+        parrentContainer.find('.sectionPage').css('width', widthChild + 2);
     }
     containerWidth();
     let blNumb = $('.number-span');
