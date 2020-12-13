@@ -35,13 +35,13 @@
     };
 
     $.fn.countTo.defaults = {
-        from: 0,  // the number the element should start at
-        to: 100,  // the number the element should end at
-        speed: 1000,  // how long it should take to count between the target numbers
-        refreshInterval: 100,  // how often the element should be updated
-        decimals: 0,  // the number of decimal places to show
-        onUpdate: null,  // callback method for every time the element is updated,
-        onComplete: null,  // callback method for when the element finishes updating
+        from: 0,
+        to: 100,
+        speed: 1000,
+        refreshInterval: 100,
+        decimals: 0,
+        onUpdate: null,
+        onComplete: null,
     };
 })(jQuery);
 
@@ -52,13 +52,24 @@ jQuery(function ($) {
         parrentContainer.find('.sectionPage').css('width', widthChild + 2);
     }
     containerWidth();
+    let blNumbPaid = $('.number-span-paid');
+    blNumbPaid.each(function (index, value) {
+        let valueNum = $(this).text();
+        $(this).countTo({
+            from: 0,
+            to: valueNum,
+            speed: 3000,
+            refreshInterval: 50,
+            decimals: 2,
+        });
+    });
     let blNumb = $('.number-span');
     blNumb.each(function (index, value) {
         let valueNum = $(this).text();
         $(this).countTo({
             from: 0,
             to: valueNum,
-            speed: 5000,
+            speed: 3000,
             refreshInterval: 50,
         });
     });

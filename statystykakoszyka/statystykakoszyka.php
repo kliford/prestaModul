@@ -155,8 +155,8 @@ class statystykakoszyka extends Module
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Pokazywać nowych klientów'),
-						'name' => 'NEW_CLIENT',
+						'label' => $this->l('Pokazywać kwotę zamówień'),
+						'name' => 'TOTAL_ORDER',
 						'values' => array(
 							array(
 								'id' => 'active_on',
@@ -189,8 +189,8 @@ class statystykakoszyka extends Module
 					),
 					array(
 						'type' => 'switch',
-						'label' => $this->l('Pokazywać kwotę zamówień'),
-						'name' => 'TOTAL_ORDER',
+						'label' => $this->l('Pokazywać nowych klientów'),
+						'name' => 'NEW_CLIENT',
 						'values' => array(
 							array(
 								'id' => 'active_on',
@@ -246,6 +246,7 @@ class statystykakoszyka extends Module
 
 	}
 
+
 	protected function _postProcess()
 	{
 		$shop_group_list = array();
@@ -298,14 +299,56 @@ class statystykakoszyka extends Module
 	}
 
 	public function getValueConfiguration()
-	{
-		$this->context->smarty->assign(array(
-			'order_value' => (int)Configuration::get('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE')),
-			'client_value' => (int)Configuration::get('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT')),
-			'basket_value' => (int)Configuration::get('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE')),
-			'total_value' => (int)Configuration::get('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER')),
-		));
+	{		
+		$todayFrom = date('Y-m-d') . ' 00:00:00';
+		$todayTo = date('Y-m-d') . ' 23:59:59';
+
+		$new_customers = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'customer`
+			WHERE `date_add` BETWEEN "'.pSQL($todayFrom).'" AND "'.pSQL($todayTo).'"
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+		);
+
+		$new_cart = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'cart`
+			WHERE `date_add` BETWEEN "'.pSQL($todayFrom).'" AND "'.pSQL($todayTo).'"
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+		);
+
+		$new_order = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT COUNT(*)
+			FROM `'._DB_PREFIX_.'orders`
+			WHERE `date_add` BETWEEN "'.pSQL($todayFrom).'" AND "'.pSQL($todayTo).'"
+			AND current_state = 2
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+		);
+
+		$new_total_paid = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+			SELECT SUM(total_paid)
+			FROM `'._DB_PREFIX_.'orders`
+			WHERE `date_add` BETWEEN "'.pSQL($todayFrom).'" AND "'.pSQL($todayTo).'"
+			AND current_state = 2
+			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
+		);
+
+
+		$this->context->smarty->assign(
+			array(
+				'order_value' => (int)Configuration::get('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE')),
+				'client_value' => (int)Configuration::get('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT')),
+				'basket_value' => (int)Configuration::get('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE')),
+				'total_value' => (int)Configuration::get('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER')),
+				'new_customer' => $new_customers,
+				'new_cart' => $new_cart,
+				'new_order' => $new_order,
+				'new_total_paid' => $new_total_paid,
+				'currency_shop' => $this->context->currency->sign
+			)
+		);
 	}
+
 
 	/** Initialize the module declaration */
 	private function initializeModule()

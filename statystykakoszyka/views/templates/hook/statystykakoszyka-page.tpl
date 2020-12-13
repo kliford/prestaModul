@@ -9,13 +9,13 @@
                         </figure>
                         <div class='info-text'>
                             <p class="description-txt">{l s='Dziś złożono' mod='statystykakoszyka'}</p>
-                            <p class="top-span"><span class="number-span">56</span> {l s='zamówień' mod='statystykakoszyka'}</p>
+                            <p class="top-span"><span class="number-span">{$new_order}</span> {l s='zamówień' mod='statystykakoszyka'}</p>
                         </div>
                     </div>
                     <div class="inline-bl total-info-bl line-left {if $total_value != 0}active-bl{else}hide-bl{/if}">
                         <div class='info-text'>
                             <p class="description-txt txt-big"> {l s='Na kwotę' mod='statystykakoszyka'}</p>
-                            <p class="top-span"><span class="number-span">12450</span> {l s='zł' mod='statystykakoszyka'}</p>
+                            <p class="top-span"><span class="number-span-paid">{$new_total_paid}</span> {$currency_shop}</p>
                         </div>
                     </div>
                     <div class="inline-bl quantity-bl line-left {if $basket_value != 0}active-bl{else}hide-bl{/if}">
@@ -24,7 +24,7 @@
                         </figure>
                         <div class='info-text'>
                             <p class="description-txt">{l s='Dziś utworzono' mod='statystykakoszyka'}</p>
-                            <p class="top-span"><span class="number-span">567</span> {l s='koszyków' mod='statystykakoszyka'}</p>
+                            <p class="top-span"><span class="number-span">{$new_cart}</span> {l s='koszyków' mod='statystykakoszyka'}</p>
                         </div>
                     </div>
                     <div class="inline-bl client-bl line-left {if $client_value != 0}active-bl{else}hide-bl{/if}">
@@ -32,7 +32,7 @@
                             <img src="{$base_dir}modules/statystykakoszyka/images/img-user.png" alt>
                         </figure>
                         <div class='info-text'>
-                            <p class="top-span data_value"><span id="new_customers" class="number-span"></span> {l s='nowych klientów' mod='statystykakoszyka'}</p>
+                            <p class="top-span data_value"><span class="number-span">{$new_customer}</span> {l s='nowych klientów' mod='statystykakoszyka'}</p>
                             <p class="description-txt">{l s='się dziś zarejestrowało' mod='statystykakoszyka'}</p>
                         </div>
                     </div>
