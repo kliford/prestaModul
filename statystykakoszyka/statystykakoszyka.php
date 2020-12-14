@@ -325,7 +325,7 @@ class statystykakoszyka extends Module
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
 		);
 
-		$new_total_paid = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
+		$new_total = Db::getInstance(_PS_USE_SQL_SLAVE_)->getValue('
 			SELECT SUM(total_paid)
 			FROM `'._DB_PREFIX_.'orders`
 			WHERE `date_add` BETWEEN "'.pSQL($todayFrom).'" AND "'.pSQL($todayTo).'"
@@ -333,6 +333,11 @@ class statystykakoszyka extends Module
 			'.Shop::addSqlRestriction(Shop::SHARE_ORDER)
 		);
 
+		$id_currency_active = $this->context->currency->sign;
+
+		$new_currency = $this->context->currency->conversion_rate;
+
+		$new_total_paid = $new_total * $new_currency;
 
 		$this->context->smarty->assign(
 			array(
@@ -344,7 +349,7 @@ class statystykakoszyka extends Module
 				'new_cart' => $new_cart,
 				'new_order' => $new_order,
 				'new_total_paid' => $new_total_paid,
-				'currency_shop' => $this->context->currency->sign
+				'currency_shop' => $id_currency_active
 			)
 		);
 	}
