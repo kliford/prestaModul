@@ -92,7 +92,8 @@
     width: 100%;;
 }
 .sectionPage h2.title-h2{
-font-size: 16px;
+font-size: 15px;
+font-weight: 700;
 text-transform: uppercase;
 padding: 8px 13px;
 background-image: url(../../images/bg-top-modul.png);
@@ -163,18 +164,18 @@ padding: 1vh 10px;
     margin-bottom: 1px;
 }
 .contentPage .number-span-paid{
-    font-weight: 700;
+    font-weight: 500;
     font-size: 20px;
-    color: #37983a;
+    color: #0fb022;
     display: inline-block;
     margin-top: 3px;
 }
 .contentPage .top-span{
     display: inline-block;
     width: 100%;
-    font-weight: 700;
+    font-weight: 600;
     font-size: 15px;
-    color: #37983a;
+    color: #0fb022;
 }
 .inline-bl.active-bl{
     visibility: visible;
