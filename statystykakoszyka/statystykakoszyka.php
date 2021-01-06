@@ -29,7 +29,7 @@ class statystykakoszyka extends Module
 	{
 		/* Adds Module */
 		if (parent::install() &&
-			 $this->registerHook('displayHeader')
+			$this->registerHook('displayHeader')
 			&& $this->registerHook('displayLeftColumn')
 			&& $this->registerHook('displayRightColumn')
 			&& $this->registerHook('displayHome')
@@ -99,8 +99,6 @@ class statystykakoszyka extends Module
 		
 	}
 
-
-	
 	public function hookDisplayBackOfficeHeader()
 	{
 		$this->context->controller->addCss($this->_path . 'views/css/statystykakoszyka.css', 'all');
@@ -111,7 +109,6 @@ class statystykakoszyka extends Module
 		$this->context->controller->addCss($this->_path . 'views/css/statystykakoszyka.css', 'all');
 		$this->context->controller->addJS(($this->_path) . 'views/js/CountUp.js');
 		$this->context->controller->addJS(($this->_path) . 'views/js/script.js');
-
 	}
 		
 	/** Module configuration page */
@@ -259,19 +256,19 @@ class statystykakoszyka extends Module
 			if (!in_array($shop_group_id, $shop_group_list))
 				$shop_group_list[] = $shop_group_id;
 
-			$res = Configuration::updateValue('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE'), false, $shop_group_id, $shop_id);
-			$res = Configuration::updateValue('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT'), false, $shop_group_id, $shop_id);
-			$res = Configuration::updateValue('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE'), false, $shop_group_id, $shop_id);
-			$res = Configuration::updateValue('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER'), false, $shop_group_id, $shop_id);
+			$res = Configuration::updateValue('ORDER_SCORE', (int)Tools::getValue('ORDER_SCORE'), false, $shop_group_id, $shop_id);
+			$res = Configuration::updateValue('NEW_CLIENT', (int)Tools::getValue('NEW_CLIENT'), false, $shop_group_id, $shop_id);
+			$res = Configuration::updateValue('BASKET_SCORE', (int)Tools::getValue('BASKET_SCORE'), false, $shop_group_id, $shop_id);
+			$res = Configuration::updateValue('TOTAL_ORDER', (int)Tools::getValue('TOTAL_ORDER'), false, $shop_group_id, $shop_id);
 
 		}
 
 		/* Update global shop context if needed */
 
-			$res = Configuration::updateValue('ORDER_SCORE', (int)Tools::getVAlue('ORDER_SCORE'));
-			$res &= Configuration::updateValue('NEW_CLIENT', (int)Tools::getVAlue('NEW_CLIENT'));
-			$res &= Configuration::updateValue('BASKET_SCORE', (int)Tools::getVAlue('BASKET_SCORE'));
-			$res &= Configuration::updateValue('TOTAL_ORDER', (int)Tools::getVAlue('TOTAL_ORDER')); 
+			$res = Configuration::updateValue('ORDER_SCORE', (int)Tools::getValue('ORDER_SCORE'));
+			$res &= Configuration::updateValue('NEW_CLIENT', (int)Tools::getValue('NEW_CLIENT'));
+			$res &= Configuration::updateValue('BASKET_SCORE', (int)Tools::getValue('BASKET_SCORE'));
+			$res &= Configuration::updateValue('TOTAL_ORDER', (int)Tools::getValue('TOTAL_ORDER')); 
 
 	}
 
@@ -354,7 +351,6 @@ class statystykakoszyka extends Module
 		);
 	}
 
-
 	/** Initialize the module declaration */
 	private function initializeModule()
 	{
@@ -374,69 +370,5 @@ class statystykakoszyka extends Module
 		$this->displayName = $this->l('Statystyka Koszyka');
 		$this->description = $this->l('Informacja o zakupach');
 		$this->confirmUninstall = $this->l('Czy na pewno chcesz odinstalować ten moduł?');
-	}
-
-	/** Set module default configuration into database */
-	private function initDefaultConfigurationValues()
-	{
-		foreach ( self::DEFAULT_CONFIGURATION as $key => $value )
-		{
-			if ( !Configuration::get($key) )
-			{
-				Configuration::updateValue($key, $value);
-			}
-		}
-
-		return true;
-	}
-
-	/** Install module tab, to your admin controller */
-	private function installTab()
-	{
-		$languages = Language::getLanguages();
-		
-		$tab = new Tab();
-		$tab->class_name = 'AdminStatystykaKoszyka';
-		$tab->module = $this->name;
-		$tab->id_parent = (int) Tab::getIdFromClassName('DEFAULT');
-
-		foreach ( $languages as $lang )
-		{
-			$tab->name[$lang['id_lang']] = 'Statystyka Koszyka';
-		}
-
-		try
-		{
-			$tab->save();
-		}
-		catch ( Exception $e )
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	/** Uninstall module tab */
-	private function uninstallTab()
-	{
-		$tab = (int) Tab::getIdFromClassName('AdminStatystykaKoszyka');
-
-		if ( $tab )
-		{
-			$mainTab = new Tab($tab);
-			
-			try
-			{
-				$mainTab->delete();
-			}
-			catch ( Exception $e )
-			{
-				echo $e->getMessage();
-				return false;
-			}
-		}
-
-		return true;
 	}
 }
